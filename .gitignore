@@ -4,3 +4,11 @@
 /.idea/libraries
 .DS_Store
 /build
+
+.idea/.name
+.idea/.name
+.idea/.name
+.idea/gradle.xml
+.idea/misc.xml
+.idea/modules.xml
+app/app.iml
