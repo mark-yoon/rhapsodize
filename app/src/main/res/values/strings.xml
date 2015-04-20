@@ -4,4 +4,8 @@
     <string name="app_name">Rhapsodize</string>
 
     <string name="keyword_caption">Start demo!</string>
+    <string name="title_activity_record">RecordActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>

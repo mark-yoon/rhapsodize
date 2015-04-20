@@ -7,9 +7,11 @@ import java.io.File;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.cmu.pocketsphinx.Assets;
@@ -17,17 +19,49 @@ import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
-public class MainActivity extends Activity implements RecognitionListener {
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.R.*;
+
+import java.util.ArrayList;
+
+public class MainActivity extends ActionBarActivity implements RecognitionListener {
     /* class variables */
     private static final String KEYWORD_SEARCH = "testing";
     private SpeechRecognizer recognizer;
+    private ListView recordingsList;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
 
-        // Display data
         setContentView(R.layout.activity_main);
+        // Relate the listView from java to the one created in XML
+        recordingsList = (ListView) findViewById(R.id.list);
+        ImageButton fabImageButton = (ImageButton) findViewById(R.id.fab_image_button);
+        final ArrayList<String> list = new ArrayList<>();
+
+        // Populate list view
+        for (int i=0; i<5; i++) {
+            list.add("Item "+i);
+        }
+        final MyCustomAdapter adapter = new MyCustomAdapter(MainActivity.this, list);
+        fabImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list.add("New Item");
+                adapter.notifyDataSetChanged();
+                newActivity(recordingsList.);
+            }
+        });
+        // Show the ListView on the screen
+        recordingsList.setAdapter(adapter);
+
+        // Display data
+//        setContentView(R.layout.activity_main);
         ((TextView) findViewById(R.id.caption)).setText("Preparing the recognizer");
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
@@ -55,6 +89,12 @@ public class MainActivity extends Activity implements RecognitionListener {
                 }
             }
         }.execute();
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        String item = (String) getListAdapter().getItem(position);
+        Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -143,6 +183,24 @@ public class MainActivity extends Activity implements RecognitionListener {
     @Override
     public void onTimeout() {
         switchSearch(KEYWORD_SEARCH);
+    }
+
+    /** Called when the user clicks the newActivity button */
+    public void newActivity(View view) {
+        // Get the edit text UI element
+//        EditText editText = (EditText) findViewById(R.id.edit_message);
+
+        // Now get the message
+//        String msg = editText.getText().toString();
+
+        // Create a new Intent
+//        Intent intent = new Intent(this, Second.class);
+//
+//        //Send the message
+//        intent.putExtra(EXTRA_MESSAGE, msg);
+
+        // start the activity
+//        startActivity(intent);
     }
 }
 
