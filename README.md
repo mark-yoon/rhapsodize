@@ -1,5 +1,6 @@
 # rhapsodize
-Info 4120 Final Project
+**Info 4120 Final Project**
+
 Rhapsodize is an Android application (4.1+) that uses the CMUSphinx speech recognition API 
 to continuously detect speech for crutch word occurrences. It notifies the user when these words are 
 said and also keeps track of how often they are said so that the user can keep track of progress. Though 
