@@ -236,7 +236,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
 
             if ((millisUntilFinished/1000) % 120 == 0) {
                 totalCount_1 += currentCount_1;
-                counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished / 60000) - 8)) + " count: " + String.valueOf(currentCount_1) + "\n");
+                counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished / 60000) - 16)) + " count: " + String.valueOf(currentCount_1) + "\n");
                 notificationIdx += 1;
                 if (notificationIdx == 4) {
                     notificationIdx = 0;
