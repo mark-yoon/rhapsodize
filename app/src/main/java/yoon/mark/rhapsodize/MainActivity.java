@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private Button startB;
     private final long startTime = 480 * 1000;
     private final long interval = 1 * 1000;
+    private long timeRemaining = 480 * 1000;
     public TextView time;
     private CountDownTimer counter;
     private boolean timerHasStarted = false;
@@ -82,13 +83,14 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     @Override
     public void onClick(View v) {
         if (!timerHasStarted) {
+            counter = new MyCountDownTimer(timeRemaining, interval);
             counter.start();
             timerHasStarted = true;
-            startB.setText("STOP");
+            startB.setText("Stop");
         } else {
             counter.cancel();
             timerHasStarted = false;
-            startB.setText("RESTART");
+            startB.setText("Resume");
         }
     }
 
@@ -164,8 +166,6 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         else
             recognizer.startListening(searchQuery, 15000);
 
-        String caption = "Demo!";
-        ((TextView) findViewById(R.id.caption)).setText(caption);
     }
 
     private void setupRecognizer(File assetsDir) throws IOException {
@@ -211,6 +211,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         @Override
         public void onTick(long millisUntilFinished) {
             time.setText("" + millisUntilFinished / 1000);
+            timeRemaining = millisUntilFinished;
         }
     }
 }
