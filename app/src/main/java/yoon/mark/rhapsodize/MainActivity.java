@@ -19,7 +19,7 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
 
 public class MainActivity extends Activity implements RecognitionListener {
     /* class variables */
-    private static final String KEYWORD_SEARCH = "testing";
+    private static final String KEYWORD_SEARCH = "like";
     private SpeechRecognizer recognizer;
 
     @Override
@@ -124,7 +124,7 @@ public class MainActivity extends Activity implements RecognitionListener {
                 .setRawLogDir(assetsDir)
 
                         // Threshold to tune for keyphrase to balance between false alarms and misses
-                .setKeywordThreshold(1e-45f)
+                .setKeywordThreshold(1e-1f)
 
                         // Use context-independent phonetic search, context-dependent is too slow for mobile
                 .setBoolean("-allphone_ci", true)
@@ -145,4 +145,3 @@ public class MainActivity extends Activity implements RecognitionListener {
         switchSearch(KEYWORD_SEARCH);
     }
 }
-
