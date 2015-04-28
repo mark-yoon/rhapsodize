@@ -36,10 +36,11 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private int currentCount_3 = 0;
     private boolean[] notificationArray;
     private boolean notifications;
+    private int notificationIdx = 0;
     private Button startB;
-    private final long startTime = 480 * 1000;
+    private final long startTime = 960 * 1000;
     private final long interval = 1 * 1000;
-    private long timeRemaining = 480 * 1000;
+    private long timeRemaining = 960 * 1000;
     public TextView time;
     private CountDownTimer counter;
     private boolean timerHasStarted = false;
@@ -236,7 +237,11 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
             if ((millisUntilFinished/1000) % 120 == 0) {
                 totalCount_1 += currentCount_1;
                 counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished / 60000) - 8)) + " count: " + String.valueOf(currentCount_1) + "\n");
-                notifications = notificationArray[(int)Math.abs((millisUntilFinished / 120000) - 4)];
+                notificationIdx += 1;
+                if (notificationIdx == 4) {
+                    notificationIdx = 0;
+                }
+                notifications = notificationArray[notificationIdx];
                 currentCount_1 = 0;
             }
 
