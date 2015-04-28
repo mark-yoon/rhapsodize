@@ -19,75 +19,6 @@
         android:id="@+id/timer"
         android:layout_gravity="center_horizontal" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="261dp"
-        android:id="@+id/scrollView"
-        android:fillViewport="false"
-        android:layout_weight="0.24" >
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 1: "
-                android:id="@+id/value1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 2: "
-                android:id="@+id/value2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 3: "
-                android:id="@+id/value3" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 4: "
-                android:id="@+id/value4" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 5: "
-                android:id="@+id/value5" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 6: "
-                android:id="@+id/value6" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 7: "
-                android:id="@+id/value7" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:text="Minute 8: "
-                android:id="@+id/value8" />
-        </LinearLayout>
-    </ScrollView>
-
     <TextView
         android:id="@+id/caption"
         android:layout_width="wrap_content"
@@ -95,6 +26,15 @@
         android:layout_gravity="center_horizontal"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:typeface="sans" />
+
+    <TextView
+        android:layout_width="289dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/counts"
+        android:layout_weight="0.92"
+        android:textSize="25sp"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"

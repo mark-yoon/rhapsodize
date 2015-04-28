@@ -5,12 +5,12 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.Math;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.os.SystemClock;
 import android.widget.TextView;
 import android.view.View;
 import android.os.CountDownTimer;
@@ -30,9 +30,10 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private static final String KEYWORD_SEARCH_3 = "uh";
     private SpeechRecognizer recognizer;
     private int currentCount_1 = 0;
+    private int totalCount_1 = 0;
     private int currentCount_2 = 0;
     private int currentCount_3 = 0;
-    private boolean notifications = false;
+    private boolean notifications = true;
     private Button startB;
     private final long startTime = 480 * 1000;
     private final long interval = 1 * 1000;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     public TextView time;
     private CountDownTimer counter;
     private boolean timerHasStarted = false;
+    public TextView counts;
 
     @Override
     public void onCreate(Bundle state) {
@@ -52,6 +54,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         time = (TextView) this.findViewById(R.id.timer);
         counter = new MyCountDownTimer(startTime, interval);
         time.setText(time.getText() + String.valueOf(startTime / 1000));
+        counts = (TextView) this.findViewById(R.id.counts);
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
         new AsyncTask<Void, Void, Exception>() {
@@ -206,12 +209,21 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         @Override
         public void onFinish() {
             time.setText("Time's up!");
+            counts.setText(counts.getText() + "Total count: " + String.valueOf(totalCount_1));
         }
 
         @Override
         public void onTick(long millisUntilFinished) {
+            System.out.println(millisUntilFinished/1000);
             time.setText("" + millisUntilFinished / 1000);
             timeRemaining = millisUntilFinished;
+
+            if ((millisUntilFinished/1000) % 60 == 0) {
+                totalCount_1 += currentCount_1;
+                counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished/60000)-8)) + " count: " + String.valueOf(currentCount_1) + "\n");
+                currentCount_1 = 0;
+            }
+
         }
     }
 }
