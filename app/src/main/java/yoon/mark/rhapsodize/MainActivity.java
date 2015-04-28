@@ -10,17 +10,35 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.os.SystemClock;
 import android.widget.TextView;
+import android.view.View;
+import android.os.CountDownTimer;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.Toast;
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
-public class MainActivity extends Activity implements RecognitionListener {
+public class MainActivity extends Activity implements RecognitionListener, OnClickListener {
     /* class variables */
     private static final String KEYWORD_SEARCH = "like";
+    private static final String KEYWORD_SEARCH_1 = "like";
+    private static final String KEYWORD_SEARCH_2 = "testing";
+    private static final String KEYWORD_SEARCH_3 = "uh";
     private SpeechRecognizer recognizer;
+    private int currentCount_1 = 0;
+    private int currentCount_2 = 0;
+    private int currentCount_3 = 0;
+    private boolean notifications = false;
+    private Button startB;
+    private final long startTime = 480 * 1000;
+    private final long interval = 1 * 1000;
+    public TextView time;
+    private CountDownTimer counter;
+    private boolean timerHasStarted = false;
 
     @Override
     public void onCreate(Bundle state) {
@@ -28,7 +46,11 @@ public class MainActivity extends Activity implements RecognitionListener {
 
         // Display data
         setContentView(R.layout.activity_main);
-        ((TextView) findViewById(R.id.caption)).setText("Preparing the recognizer");
+        startB = (Button) this.findViewById(R.id.timer_button);
+        startB.setOnClickListener(this);
+        time = (TextView) this.findViewById(R.id.timer);
+        counter = new MyCountDownTimer(startTime, interval);
+        time.setText(time.getText() + String.valueOf(startTime / 1000));
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
         new AsyncTask<Void, Void, Exception>() {
@@ -58,6 +80,19 @@ public class MainActivity extends Activity implements RecognitionListener {
     }
 
     @Override
+    public void onClick(View v) {
+        if (!timerHasStarted) {
+            counter.start();
+            timerHasStarted = true;
+            startB.setText("STOP");
+        } else {
+            counter.cancel();
+            timerHasStarted = false;
+            startB.setText("RESTART");
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         recognizer.cancel();
@@ -69,17 +104,35 @@ public class MainActivity extends Activity implements RecognitionListener {
     public void onPartialResult(Hypothesis hypo) {
         if (hypo == null)
             return;
+        if (!timerHasStarted)
+            switchSearch(KEYWORD_SEARCH);
 
         Vibrator v = (Vibrator) getSystemService(MainActivity.this.VIBRATOR_SERVICE);
 
         String text = hypo.getHypstr();
-        if (text.equals(KEYWORD_SEARCH)) {
-            v.vibrate(300);
-            ((TextView) findViewById(R.id.result)).setText(text);
+        if (text.equals(KEYWORD_SEARCH_1)) {
+            currentCount_1 += 1;
+            if (notifications) {
+                v.vibrate(300);
+            }
+            switchSearch(KEYWORD_SEARCH);
+        }
+        else if (text.equals(KEYWORD_SEARCH_2)) {
+            currentCount_2 += 1;
+            if (notifications) {
+                v.vibrate(300);
+            }
+            switchSearch(KEYWORD_SEARCH);
+        }
+        else if (text.equals(KEYWORD_SEARCH_3)) {
+            currentCount_3 += 1;
+            if (notifications) {
+                v.vibrate(300);
+            }
             switchSearch(KEYWORD_SEARCH);
         }
         else {
-            ((TextView) findViewById(R.id.result)).setText(text);
+            switchSearch(KEYWORD_SEARCH);
         }
     }
 
@@ -143,5 +196,21 @@ public class MainActivity extends Activity implements RecognitionListener {
     @Override
     public void onTimeout() {
         switchSearch(KEYWORD_SEARCH);
+    }
+
+    public class MyCountDownTimer extends CountDownTimer {
+        public MyCountDownTimer(long startTime, long interval) {
+            super(startTime, interval);
+        }
+
+        @Override
+        public void onFinish() {
+            time.setText("Time's up!");
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            time.setText("" + millisUntilFinished / 1000);
+        }
     }
 }
