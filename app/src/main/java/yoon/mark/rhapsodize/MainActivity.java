@@ -6,6 +6,7 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 import java.io.File;
 import java.io.IOException;
 import java.lang.Math;
+import java.util.Random;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -33,7 +34,8 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private int totalCount_1 = 0;
     private int currentCount_2 = 0;
     private int currentCount_3 = 0;
-    private boolean notifications = true;
+    private boolean[] notificationArray;
+    private boolean notifications;
     private Button startB;
     private final long startTime = 480 * 1000;
     private final long interval = 1 * 1000;
@@ -55,6 +57,13 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         counter = new MyCountDownTimer(startTime, interval);
         time.setText(time.getText() + String.valueOf(startTime / 1000));
         counts = (TextView) this.findViewById(R.id.counts);
+        boolean[][] notificationArrays = {{true, true, false, false}, {true, false, true, false}, {true, false, false, true} ,{false, false, true, true}, {false, true, false, true}, {false, true, true, false}};
+
+        Random r = new Random();
+        int i1 = r.nextInt(6);
+
+        notificationArray = notificationArrays[i1];
+        notifications = notificationArray[0];
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
         new AsyncTask<Void, Void, Exception>() {
@@ -218,9 +227,10 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
             time.setText("" + millisUntilFinished / 1000);
             timeRemaining = millisUntilFinished;
 
-            if ((millisUntilFinished/1000) % 60 == 0) {
+            if ((millisUntilFinished/1000) % 120 == 0) {
                 totalCount_1 += currentCount_1;
-                counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished/60000)-8)) + " count: " + String.valueOf(currentCount_1) + "\n");
+                counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished / 60000) - 8)) + " count: " + String.valueOf(currentCount_1) + "\n");
+                notifications = notificationArray[(int)Math.abs((millisUntilFinished / 120000) - 4)];
                 currentCount_1 = 0;
             }
 
