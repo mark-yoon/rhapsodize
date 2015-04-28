@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         startB.setOnClickListener(this);
         time = (TextView) this.findViewById(R.id.timer);
         counter = new MyCountDownTimer(startTime, interval);
-        time.setText(time.getText() + String.valueOf(startTime / 1000));
+        time.setText(time.getText() + String.valueOf(startTime / 60000) + ":" + "00");
         counts = (TextView) this.findViewById(R.id.counts);
         boolean[][] notificationArrays = {{true, true, false, false}, {true, false, true, false}, {true, false, false, true} ,{false, false, true, true}, {false, true, false, true}, {false, true, true, false}};
 
@@ -152,7 +152,6 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
 
     @Override
     public void onResult(Hypothesis hypo) {
-        ((TextView) findViewById(R.id.result)).setText("");
         if (hypo != null) {
             String text = hypo.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -219,12 +218,19 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         public void onFinish() {
             time.setText("Time's up!");
             counts.setText(counts.getText() + "Total count: " + String.valueOf(totalCount_1));
+            recognizer.cancel();
+            recognizer.shutdown();
         }
 
         @Override
         public void onTick(long millisUntilFinished) {
-            System.out.println(millisUntilFinished/1000);
-            time.setText("" + millisUntilFinished / 1000);
+            System.out.println(millisUntilFinished / 1000);
+            if ((millisUntilFinished / 1000)%60 < 10) {
+                time.setText("" + (millisUntilFinished / 1000) / 60 + ":0" + ((millisUntilFinished / 1000) % 60));
+            }
+            else {
+                time.setText("" + (millisUntilFinished / 1000) / 60 + ":" + ((millisUntilFinished / 1000) % 60));
+            }
             timeRemaining = millisUntilFinished;
 
             if ((millisUntilFinished/1000) % 120 == 0) {
