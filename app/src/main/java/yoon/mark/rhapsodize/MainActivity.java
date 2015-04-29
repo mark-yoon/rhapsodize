@@ -218,6 +218,7 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         @Override
         public void onFinish() {
             time.setText("Time's up!");
+            counts.setText(counts.getText() + "Minute 16 count: " + String.valueOf(currentCount_1) + "\n");
             counts.setText(counts.getText() + "Total count: " + String.valueOf(totalCount_1));
             recognizer.cancel();
             recognizer.shutdown();
