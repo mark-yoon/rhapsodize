@@ -20,6 +20,20 @@
         android:layout_gravity="center_horizontal" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notication status: "
+        android:id="@+id/notificationStatus"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total count: 0"
+        android:id="@+id/totalCount"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
         android:id="@+id/caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

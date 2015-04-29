@@ -9,6 +9,9 @@ import java.lang.Math;
 import java.util.Random;
 
 import android.app.Activity;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -34,9 +37,9 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private int totalCount_1 = 0;
     private int currentCount_2 = 0;
     private int currentCount_3 = 0;
-    private boolean[] notificationArray;
-    private boolean notifications;
-    private int notificationIdx = 0;
+//    private boolean[] notificationArray;
+    private boolean notifications = true;
+//    private int notificationIdx = 0;
     private Button startB;
     private final long startTime = 960 * 1000;
     private final long interval = 1 * 1000;
@@ -45,6 +48,8 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     private CountDownTimer counter;
     private boolean timerHasStarted = false;
     public TextView counts;
+    public TextView notificationStatus;
+    public TextView totalCount;
 
     @Override
     public void onCreate(Bundle state) {
@@ -55,16 +60,23 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         startB = (Button) this.findViewById(R.id.timer_button);
         startB.setOnClickListener(this);
         time = (TextView) this.findViewById(R.id.timer);
+        notificationStatus = (TextView) this.findViewById(R.id.notificationStatus);
+        totalCount = (TextView) this.findViewById(R.id.totalCount);
         counter = new MyCountDownTimer(startTime, interval);
         time.setText(time.getText() + String.valueOf(startTime / 60000) + ":" + "00");
         counts = (TextView) this.findViewById(R.id.counts);
-        boolean[][] notificationArrays = {{true, true, false, false}, {true, false, true, false}, {true, false, false, true} ,{false, false, true, true}, {false, true, false, true}, {false, true, true, false}};
+//        boolean[][] notificationArrays = {{true, true, false, false}, {true, false, true, false}, {true, false, false, true} ,{false, false, true, true}, {false, true, false, true}, {false, true, true, false}};
+//
+//        Random r = new Random();
+//        int i1 = r.nextInt(6);
 
-        Random r = new Random();
-        int i1 = r.nextInt(6);
+//        notificationArray = notificationArrays[i1];
+//        notifications = notificationArray[0];
 
-        notificationArray = notificationArrays[i1];
-        notifications = notificationArray[0];
+        if (notifications)
+            notificationStatus.setText("Notification status: On");
+        else
+            notificationStatus.setText("Notification status: Off");
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
         new AsyncTask<Void, Void, Exception>() {
@@ -127,9 +139,14 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         String text = hypo.getHypstr();
         if (text.equals(KEYWORD_SEARCH_1)) {
             currentCount_1 += 1;
+            totalCount_1 += 1;
             if (notifications) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                r.play();
                 v.vibrate(300);
             }
+            totalCount.setText("Total count: " + String.valueOf(totalCount_1));
             switchSearch(KEYWORD_SEARCH);
         }
         else if (text.equals(KEYWORD_SEARCH_2)) {
@@ -236,13 +253,16 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
             timeRemaining = millisUntilFinished;
 
             if ((millisUntilFinished/1000) % 120 == 0) {
-                totalCount_1 += currentCount_1;
                 counts.setText(counts.getText() + "Minute " + String.valueOf(Math.abs((millisUntilFinished / 60000) - 16)) + " count: " + String.valueOf(currentCount_1) + "\n");
-                notificationIdx += 1;
-                if (notificationIdx == 4) {
-                    notificationIdx = 0;
-                }
-                notifications = notificationArray[notificationIdx];
+//                notificationIdx += 1;
+//                if (notificationIdx == 4) {
+//                    notificationIdx = 0;
+//                }
+//                notifications = notificationArray[notificationIdx];
+                if (notifications)
+                    notificationStatus.setText("Notification status: On");
+                else
+                    notificationStatus.setText("Notification status: off");
                 currentCount_1 = 0;
             }
 
