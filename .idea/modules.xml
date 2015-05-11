@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Rhapsodize.iml" filepath="$PROJECT_DIR$/Rhapsodize.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rhapsodize.iml" filepath="$PROJECT_DIR$/rhapsodize.iml" />
     </modules>
   </component>
 </project>
-

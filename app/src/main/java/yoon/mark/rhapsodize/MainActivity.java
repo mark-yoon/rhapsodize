@@ -7,26 +7,39 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.Math;
 import java.util.Random;
+import java.lang.reflect.Field;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.view.View;
 import android.os.CountDownTimer;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
+//import android.widget.Toolbar;
+import android.view.ViewConfiguration;
+import android.util.Log;
+
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
-public class MainActivity extends Activity implements RecognitionListener, OnClickListener {
+import android.support.v7.widget.Toolbar;
+
+public class MainActivity extends ActionBarActivity implements RecognitionListener, OnClickListener {
     /* class variables */
     private static final String KEYWORD_SEARCH = "like";
     private static final String KEYWORD_SEARCH_1 = "like";
@@ -50,10 +63,22 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
     public TextView counts;
     public TextView notificationStatus;
     public TextView totalCount;
+    public TextView notificationType;
+    public TextView searchWord;
+
+    /** Denotes selected notification state: 0 = none, 1 = vibrate, 2 = ring, 3 = both */
+    public int notifyState = 1;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+//        getSupportActionBar().setDisplayOptions(getSupportActionBar().DISPLAY_SHOW_HOME | getSupportActionBar().DISPLAY_SHOW_TITLE);
+//        getSupportActionBar().setIcon(R.drawable.logonobg);
 
         // Display data
         setContentView(R.layout.activity_main);
@@ -61,10 +86,12 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
         startB.setOnClickListener(this);
         time = (TextView) this.findViewById(R.id.timer);
         notificationStatus = (TextView) this.findViewById(R.id.notificationStatus);
+        notificationType = (TextView) this.findViewById(R.id.notificationType);
         totalCount = (TextView) this.findViewById(R.id.totalCount);
         counter = new MyCountDownTimer(startTime, interval);
         time.setText(time.getText() + String.valueOf(startTime / 60000) + ":" + "00");
         counts = (TextView) this.findViewById(R.id.counts);
+        searchWord = (TextView) this.findViewById(R.id.searchWord);
 //        boolean[][] notificationArrays = {{true, true, false, false}, {true, false, true, false}, {true, false, false, true} ,{false, false, true, true}, {false, true, false, true}, {false, true, true, false}};
 //
 //        Random r = new Random();
@@ -77,6 +104,23 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
             notificationStatus.setText("Notification status: On");
         else
             notificationStatus.setText("Notification status: Off");
+
+        switch(notifyState) {
+            case 0:
+                notificationType.setText("Notification type: Silent");
+                break;
+            case 1:
+                notificationType.setText("Notification type: Vibrate");
+                break;
+            case 2:
+                notificationType.setText("Notification type: Ring");
+                break;
+            case 3:
+                notificationType.setText("Notification type: Vibrate and ring");
+                break;
+        }
+
+        searchWord.setText("Currently detecting: "+KEYWORD_SEARCH);
 
         // Initialize recognizer (i/o heavy, put in asynchronous task)
         new AsyncTask<Void, Void, Exception>() {
@@ -268,4 +312,40 @@ public class MainActivity extends Activity implements RecognitionListener, OnCli
 
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+
+        // TODO
+//            startActivityForResult(intent, 0);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+//    @Override
+    // TODO
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        //Retrieve data in the intent
+//        String editTextValue = data.getStringExtra("valueId");
+//    }
 }
